@@ -5,8 +5,11 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import Http from './service/http';
 
 Vue.use(ElementUI, { size: 'middle', zIndex: 3000 });
+
+Vue.Http = Vue.prototype.$Http = Http;
 
 Vue.config.productionTip = false
 

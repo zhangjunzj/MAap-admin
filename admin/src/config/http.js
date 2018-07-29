@@ -6,8 +6,10 @@ import mockService from '../service/mockService'
 
 Vue.use(VueAxios, axios)
 
+
+
 const http = {
-	run: function(serverName, params, retryFlag, callBack) {
+	run: function(serverName, params, callBack) {
 		let option = mockService[serverName]
 		let url = ''
 		if (!option) {

@@ -9,6 +9,13 @@ const mockService = {
 		type: 'get',
 		isMock: false,
 		overUrl: ''
+	},
+	login: {
+		moduleName: 'admin',
+		serverName: 'login.php',
+		type: 'post',
+		isMock: false,
+		overUrl: ''
 	}
 
 }

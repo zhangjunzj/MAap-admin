@@ -3,7 +3,7 @@
  * 环境配置
  */
 
-const baseUrl = 'https://free-api.heweather.com';
+const baseUrl = 'http://192.168.1.109';
 
 export default {
 	baseUrl
