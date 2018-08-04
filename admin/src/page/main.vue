@@ -20,10 +20,16 @@
                         <el-menu-item  @click="toAddProject" index="1-1">新增项目</el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
-                    <el-menu-item index="2" @click="toNewsList">
-                        <i class="el-icon-menu"></i>
-                        <span slot="title">新闻管理</span>
-                    </el-menu-item>
+                    <el-submenu index="2">
+                        <template slot="title">
+                        <i class="el-icon-location"></i>
+                        <span>新闻管理</span>
+                        </template>
+                        <el-menu-item-group>
+                        <el-menu-item @click="toNewsList" index="1-1">新闻列表</el-menu-item>
+                        <el-menu-item  @click="toAddProject" index="1-1">新增新闻</el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
                     <el-menu-item index="4">
                         <i class="el-icon-setting"></i>
                         <span slot="title">账号管理</span>

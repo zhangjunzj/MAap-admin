@@ -42,7 +42,7 @@ export default {
 				if (valid) {
 					this.loadingflag = true;
 
-					fetch('http://192.168.1.109/admin/login.php', {
+					fetch('http://192.168.1.102/admin/login.php', {
 						method: 'POST',
 						body: new URLSearchParams(this.loginForm).toString(),
 						headers: new Headers({

@@ -34,15 +34,24 @@
 
         <!-- 图片管理 -->
         <el-dialog
-            title="图片管理"
-            :visible.sync="dialogVisible">
+            width="60%"
+            :title="targetTitle"
+            :visible.sync="dialogVisible"
+            @closed="imgModalcloseHandler">
             <div>
                 <el-upload
-                    action="http://192.168.1.109/admin/item.php?action=imgadd"
+                    action="http://192.168.1.102/admin/item.php?action=imgadd"
                     list-type="picture-card"
+                    ref="imgUpload"
+                    
+                    :data="payload"
+                    :disabled="false"
+                    :limit="5"
+                    :on-exceed="onExceed"
                     :file-list="fileList"
+                    :before-upload="handleimgBeforeUpload"
                     :on-preview="handlePictureCardPreview"
-                    :on-remove="handleRemove">
+                    :before-remove="handleimgBeforeRemove">
                     <i class="el-icon-plus"></i>
                 </el-upload>
             </div>
@@ -85,7 +94,7 @@ export default {
     data () {
         return {
             tableData: [],
-            fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+            fileList: [],
             dialogVisible: false,
             editDialogVisible: false,
             dialogImageUrl: '',
@@ -94,18 +103,80 @@ export default {
                 title: '',
                 introduce: ''
             },
-            tableLoading: true
+            tableLoading: true,
+            payload: { // 图片上传参数
+                targetId: null
+            },
+            targetTitle: '图片管理',
+            imgCheckFlag: true
+
         }
     },
     methods: {
-        imgManage() {
-            this.dialogVisible = true;
+        // 打开图片管理模态框
+        imgManage(item) {
+            this._fetch('http://192.168.1.102/admin/item.php?action=queryitemimg', 'POST', {itemId: item.id})
+                .then((res)=> {
+                    if (res.code === 1) {
+                        res.data && res.data.map((val, key)=> {
+                            val.url = 'http://192.168.1.102/admin/' + val.url;
+                            return val;
+                        });
+                        this.fileList = res.data;
+                        this.dialogVisible = true;
+                    } else {
+                        this.$message.warning('图片加载失败');
+                    }
+                    
+                })
+                .catch((err)=> {
+                    this.$message({
+                        type: 'info',
+                        message: '查询失败'
+                    });  
+                })
+            this.targetTitle = `项目图片 - ${item.title}`;
+            this.payload.targetId = item.id;
+            
+            
+        },
+        // 关闭图片弹框时重置图片列表
+        imgModalcloseHandler() {
+            this.$refs.imgUpload.clearFiles();
+            this.fileList = [];
         },
         handlePictureCardPreview() {
 
         },
-        handleRemove() {
-
+        // 图片上传前校验图片大小
+        handleimgBeforeUpload(file) {
+            if (file.size/1024/1024 > 2.5) {
+                this.imgCheckFlag = false;
+                this.$message.warning('图片大小超过限制，最大2.4M');
+                return false;
+            }
+            this.imgCheckFlag = true;
+            
+        },
+        // 删除图片
+        handleimgBeforeRemove(file, fileList) {
+            if (this.imgCheckFlag) {
+                this._fetch('http://192.168.1.102/admin/item.php?action=delimg', 'POST', {id: file.name})
+                    .then((res)=> {
+                        if (res.code === 1) {
+                            this.$message.success('图片删除成功');
+                        } else {
+                            this.$message.warning('图片删除失败');
+                        }
+                        
+                    })
+                    .catch((err)=> {
+                        this.$message.warning('图片删除失败');
+                    })
+            }
+        },
+        onExceed(files, fileList) {
+            this.$message.warning('图片数量超过限制，最多上传5张呢');
         },
         // 删除
         delItem(item) {
@@ -115,7 +186,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this._fetch('http://192.168.1.109/admin/item.php?action=del', 'POST', {id: item.id})
+                this._fetch('http://192.168.1.102/admin/item.php?action=del', 'POST', {id: item.id})
                     .then((res)=> {
                         this.$message({
                             type: 'success',
@@ -147,7 +218,7 @@ export default {
         // 修改
         editItem () {
             let params = Object.assign({}, this.itemForm, {id: this.itemForm.id*1})
-            this._fetch('http://192.168.1.109/admin/item.php?action=edit', 'POST', params)
+            this._fetch('http://192.168.1.102/admin/item.php?action=edit', 'POST', params)
                 .then((res)=> {
                     console.log(res);
                     if (res.code === 1) {
@@ -165,7 +236,7 @@ export default {
         },
         queryTableData() {
             this.tableLoading = true;
-            this._fetch('http://192.168.1.109/admin/itemlist.php', 'POST', {test:123})
+            this._fetch('http://192.168.1.102/admin/itemlist.php', 'POST', {test:123})
                 .then((res)=> {
                     this.tableData = res.data;
                     this.tableLoading = false;

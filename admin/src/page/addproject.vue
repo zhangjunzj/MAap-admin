@@ -59,6 +59,9 @@
                     introduce: [
                         { required: true, message: '项目介绍不能为空', trigger: 'blur'}
                     ]
+                },
+                targetItemId: {
+                    itemId: 123
                 }
             }
         },
@@ -66,7 +69,7 @@
             onSubmit() {
                 this.$refs.form.validate((valid)=>{
                     if (valid) {
-                        this._fetch('http://192.168.1.109/admin/item.php?action=add', 'POST', this.form)
+                        this._fetch('http://192.168.1.102/admin/item.php?action=add', 'POST', this.form)
                             .then((res)=>{
                                 if (res.code === 1) {
                                     this.$message.success('添加成功!');
