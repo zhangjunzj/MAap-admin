@@ -61,6 +61,14 @@
             </span>
         </el-dialog>
 
+        <el-dialog
+            width="70%"
+            title="查看大图"
+            top="10vh"
+            :visible.sync="viewImgDialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt="">
+        </el-dialog>
+
         <!-- 项目修改 -->
         <el-dialog
             title="项目详情／修改"
@@ -108,7 +116,9 @@ export default {
                 targetId: null
             },
             targetTitle: '图片管理',
-            imgCheckFlag: true
+            imgCheckFlag: true,
+            viewImgDialogVisible: false,
+            dialogImageUrl: ''
 
         }
     },
@@ -145,8 +155,9 @@ export default {
             this.$refs.imgUpload.clearFiles();
             this.fileList = [];
         },
-        handlePictureCardPreview() {
-
+        handlePictureCardPreview(file) {
+            this.dialogImageUrl = file.url;
+            this.viewImgDialogVisible = true;
         },
         // 图片上传前校验图片大小
         handleimgBeforeUpload(file) {

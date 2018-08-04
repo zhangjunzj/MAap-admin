@@ -1,7 +1,11 @@
 <template>
     <div class="container">
         <el-container class="el-cont">
-            <el-header>Header</el-header>
+            <el-header>
+                <div class="main-logo">
+                    MAap
+                </div>
+            </el-header>
             <el-container>
                 <el-aside width="200px">
                     <el-menu
@@ -27,7 +31,7 @@
                         </template>
                         <el-menu-item-group>
                         <el-menu-item @click="toNewsList" index="1-1">新闻列表</el-menu-item>
-                        <el-menu-item  @click="toAddProject" index="1-1">新增新闻</el-menu-item>
+                        <el-menu-item  @click="toAddNews" index="1-1">新增新闻</el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
                     <el-menu-item index="4">
@@ -59,6 +63,9 @@ export default {
         },
         toAddProject() {
             this.$router.push('/main/addproject')
+        },
+        toAddNews() {
+            this.$router.push('/main/addnews')
         }
     }
 }
@@ -70,15 +77,28 @@ export default {
 		top: 0;
 		right: 0;
         bottom: 0;
+        //background-image: url(../assets/bg.jpg);
         .el-cont {
             width: 100%;
             height: 100%;
         }
         .el-header {
-            background: #ddd;
+            padding: 0;
+            background: rgb(55,98, 167);
         }
         .el-aside {
-            background: #ccc;
+            background: rgb(68, 74, 81);
+        }
+        .el-main {
+            background: #fff;
+        }
+        .main-logo {
+            width: 200px;
+            height: 100%;
+            float: left;
+            background: rgb(34, 70, 125);
+            color: #fff;
+            
         }
     }
 </style>
