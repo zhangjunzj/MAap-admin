@@ -87,7 +87,6 @@
                         ]
                     }
                 },
-                
                 payload: { // 图片上传参数
                     targetId: null
                 }

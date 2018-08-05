@@ -249,7 +249,7 @@ export default {
             this.tableLoading = true;
             this._fetch('http://192.168.1.102/admin/itemlist.php', 'POST', {test:123})
                 .then((res)=> {
-                    this.tableData = res.data;
+                    this.tableData = res.data.reverse();
                     this.tableLoading = false;
                 })
                 .catch(()=> {

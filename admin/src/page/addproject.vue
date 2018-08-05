@@ -21,12 +21,20 @@
                     v-model="form.introduce">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="项目图片">
+                <el-form-item label="项目图片" prop="fileList">
                     <el-upload
-                        action="https://jsonplaceholder.typicode.com/posts/"
+                        action="http://192.168.1.102/admin/item.php?action=imgadd"
                         list-type="picture-card"
                         size="mini"
-                        :on-preview="handlePictureCardPreview"
+                        ref="upload"
+                        :data="payload"
+                        :file-list="form.fileList"
+                        :auto-upload="false"
+                        :limit="5"
+                        :on-exceed="onExceed"
+                        :on-change="imgBeforeUpHandle"
+                        :on-success="imgUploadSuccessHandle"
+                        :on-error="imgUploadErrorHandle"
                         :on-remove="handleRemove">
                         <i class="el-icon-plus"></i>
                     </el-upload>
@@ -35,7 +43,7 @@
                     </el-dialog>
                 </el-form-item>  
                 <el-form-item>
-                    <el-button type="primary" @click="onSubmit">新增项目</el-button>
+                    <el-button type="primary"  :loading="loadingflag" @click="onSubmit">{{this.loadingflag ? '正在新增...': '新增项目'}}</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -47,9 +55,11 @@
             return {
                 dialogVisible: false,
                 dialogImageUrl: '',
+                loadingflag: false,
                 form: {
                     title: '',
-                    introduce: ''
+                    introduce: '',
+                    fileList: []
                 },
                 rules: {
                     title: [
@@ -57,10 +67,13 @@
                     ],
                     introduce: [
                         { required: true, message: '项目介绍不能为空', trigger: 'blur'}
+                    ],
+                    fileList: [
+                        { required: true, message: '请至少上传一张项目图片', trigger: 'change'}
                     ]
                 },
-                targetItemId: {
-                    itemId: 123
+                payload: { // 图片上传参数
+                    targetId: null
                 }
             }
         },
@@ -68,27 +81,68 @@
             onSubmit() {
                 this.$refs.form.validate((valid)=>{
                     if (valid) {
+                        this.loadingflag = true;
                         this._fetch('http://192.168.1.102/admin/item.php?action=add', 'POST', this.form)
                             .then((res)=>{
                                 if (res.code === 1) {
-                                    this.$message.success('添加成功!');
+                                    this.payload.targetId = res.id;
+                                    this.$refs.upload.submit();
+                                    
                                 } else {
-                                    this.$message.error('修改失败!');
+                                    this.loadingflag = false;
+                                    this.$message.error('修改添加项目失败!');
                                 }
                             })
                             .catch((err)=> {
-                                this.$message.error('修改失败!');
+                                this.loadingflag = false;
+                                this.$message.error('添加项目失败!');
                             })
                     } else {
                         return false;
                     }
                 });                
             },
-            handlePictureCardPreview(){
-
-            },
+            
             handleRemove(){
 
+            },
+            onExceed(files, fileList) {
+                this.$message.warning('图片数量超过限制，最多上传5张呢');
+            },
+            imgBeforeUpHandle(file, fileList) {
+                if (file && file.status === 'ready') {
+                    if (file.size/1024/1024 < 2.5) {
+                        this.form.fileList = fileList;
+                    } else {
+                        this.$message.warning('图片大小超过限制，最大2.4M');
+                        return false;
+                    }
+                    
+                }
+            },
+            imgUploadSuccessHandle(response, file, fileList) {
+                // 所有图片都成功上传后
+                // console.log(JSON.stringify(fileList));
+                let flag = true;
+                fileList.forEach(val => {
+                    if (val.status !== 'success') {
+                        flag = false;
+                    }
+                });
+                if (flag) {
+                    this.$message.success('添加项目成功!');
+                    window.setTimeout(()=>{
+                        this.loadingflag = false;
+                        this.$router.push('/main/projectlist');
+                    }, 500);
+                }
+            },
+            imgUploadErrorHandle(err, file, fileList) {
+                this.$message.warning('添加项目成功,图片上传异常，请到项目列表页查看');
+                window.setTimeout(()=>{
+                    this.loadingflag = false;
+                    this.$router.push('/main/projectlist');
+                }, 500);
             },
             _fetch(url, method = 'POST', params) {
                 return new Promise((resolve, reject)=> {
