@@ -3,40 +3,44 @@
         <el-container class="el-cont">
             <el-header>
                 <div class="main-logo">
-                    MAap
+                    <span>MAap</span>
                 </div>
             </el-header>
             <el-container>
                 <el-aside width="200px">
                     <el-menu
-                    default-active="2"
-                    class="el-menu-vertical-demo"
+                    default-active="1-1"
+                    class=""
                     background-color="#545c64"
                     text-color="#fff"
-                    active-text-color="#ffd04b">
+                    active-text-color="#409EFF">
                     <el-submenu index="1">
                         <template slot="title">
-                        <i class="el-icon-location"></i>
+                        <i class="el-icon-menu"></i>
                         <span>项目管理</span>
                         </template>
                         <el-menu-item-group>
                         <el-menu-item @click="toProjectList" index="1-1">项目列表</el-menu-item>
-                        <el-menu-item  @click="toAddProject" index="1-1">新增项目</el-menu-item>
+                        <el-menu-item  @click="toAddProject" index="1-2">新增项目</el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
                     <el-submenu index="2">
                         <template slot="title">
-                        <i class="el-icon-location"></i>
+                        <i class="el-icon-menu"></i>
                         <span>新闻管理</span>
                         </template>
                         <el-menu-item-group>
-                        <el-menu-item @click="toNewsList" index="1-1">新闻列表</el-menu-item>
-                        <el-menu-item  @click="toAddNews" index="1-1">新增新闻</el-menu-item>
+                        <el-menu-item @click="toNewsList" index="2-1">新闻列表</el-menu-item>
+                        <el-menu-item  @click="toAddNews" index="2-2">新增新闻</el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
-                    <el-menu-item index="4">
+                    <el-menu-item index="3">
                         <i class="el-icon-setting"></i>
                         <span slot="title">账号管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="4" @click="toIntroduce">
+                        <i class="el-icon-document"></i>
+                        <span slot="title">使用说明</span>
                     </el-menu-item>
                     </el-menu>
                 </el-aside>
@@ -66,6 +70,9 @@ export default {
         },
         toAddNews() {
             this.$router.push('/main/addnews')
+        },
+        toIntroduce() {
+            this.$router.push('/main/introduce')
         }
     }
 }
@@ -95,6 +102,9 @@ export default {
         .main-logo {
             width: 200px;
             height: 100%;
+            line-height: 60px;
+            font-size: 20px;
+            text-indent: 30px;
             float: left;
             background: rgb(34, 70, 125);
             color: #fff;

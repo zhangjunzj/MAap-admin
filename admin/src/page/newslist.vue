@@ -3,55 +3,39 @@
         <el-table
             :data="tableData"
             border
+            stripe
+            v-loading="tableLoading"
             style="width: 100%">
             <el-table-column
             prop="title"
-            label="新闻标题"
-            width="180">
-            </el-table-column>
-            <el-table-column
-            prop="introduce"
-            label="新闻介绍">
+            label="新闻标题">
             </el-table-column>
             <el-table-column
             prop="addtime"
             label="更新时间"
-            width="160">
+            width="180">
             </el-table-column>
             <el-table-column
             label="操作"
-            width="180px">
+            width="200px">
                 <template slot-scope="scope">
-                    <el-button type="primary" size="mini" >修改</el-button>
-                    <el-button type="warning" size="mini" >删除</el-button>
+                    <el-button type="primary" size="mini" @click="handleDetailNews(scope.row)">详细</el-button>
+                    <!-- <el-button type="primary" size="mini" >修改</el-button> -->
+                    <el-button type="warning" size="mini" @click="handleDelNews(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
-        <!-- 新闻模态框 -->
+        <!-- 新闻详细框 -->
         <el-dialog
-            title="新闻详情／修改"
-            :visible.sync="editDialogVisible">
-            <div>
-                <el-form ref="form" :model="newsForm" label-width="80px">
-                    <el-form-item label="新闻标题">
-                        <el-input
-                        placeholder="请输入新闻标题" 
-                        v-model="newsForm.title"></el-input>
-                    </el-form-item>
-                    <el-form-item label="新闻内容">
-                        <el-input
-                        type="textarea"
-                        :rows="8"
-                        placeholder="请输入内容"
-                        v-model="newsForm.introduce">
-                        </el-input>
-                    </el-form-item>
-                </el-form>
+            :title="targetTitle"
+            width="70%"
+            :visible.sync="DialogVisible">
+            <div class="detail-time">{{targetTime}}</div>
+            <div id="newsContentRef" v-html="targetContent">
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="editDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="editItem">确 定</el-button>
+                <el-button type="primary" @click="DialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -63,11 +47,14 @@ export default {
         return {
             tableData: [],
             tableLoading: true,
-            editDialogVisible: false,
+            DialogVisible: false,
             newsForm: {
                 title: '',
-                introduce: ''
-            }
+                content: ''
+            },
+            targetContent:'',
+            targetTitle: '新闻详情',
+            targetTime: ''
 
         }
     },
@@ -76,13 +63,43 @@ export default {
             this.tableLoading = true;
             this._fetch('http://192.168.1.102/admin/newslist.php', 'POST')
                 .then((res)=> {
-                    this.tableData = res.data;
+                    this.tableData = res.data.reverse();
                     this.tableLoading = false;
                 })
                 .catch(()=> {
                     this.$message.error('数据加载失败');
                     this.tableLoading = false;
                 })
+        },
+        handleDelNews(item) {
+            this.$confirm('此操作将永久删除该条新闻, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this._fetch('http://192.168.1.102/admin/news.php?action=del', 'POST', {id: item.id})
+                    .then((res)=> {
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                        this.queryTableData();
+
+                    })
+                    .catch((err)=> {
+                        this.$message({
+                            type: 'info',
+                            message: '删除失败'
+                        });  
+                    })
+                
+            }).catch(() => {});
+        },
+        handleDetailNews(item) {
+            this.targetContent = item.content;
+            this.targetTitle = item.title;
+            this.targetTime = item.addtime;
+            this.DialogVisible = true;
         },
         _fetch(url, method = 'POST', params) {
             return new Promise((resolve, reject)=> {
@@ -112,8 +129,20 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>
-
+<style lang="scss">
+    .el-dialog__body {
+        img {
+            max-width: 100%;
+        }
+    }
+    .detail-time {
+        padding-bottom: 20px;
+        color: #666;
+        font-size: 12px;
+    }
+    .el-dialog__body {
+        padding-top: 10px;
+    }
 </style>
 
 

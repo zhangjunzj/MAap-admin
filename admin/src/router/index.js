@@ -7,6 +7,7 @@ import ProjectList from '@/page/projectlist'
 import NewsList from '@/page/newslist'
 import AddProject from '@/page/addproject'
 import AddNews from '@/page/addnews'
+import Introduce from '@/page/introduce'
 
 Vue.use(Router)
 
@@ -41,6 +42,11 @@ export default new Router({
           path: '/main/addnews',
           name: 'AddNews',
           component: AddNews
+        },
+        {
+          path: '/main/introduce',
+          name: 'Introduce',
+          component: Introduce
         }
       ]
     }

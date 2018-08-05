@@ -11,7 +11,7 @@
 				</el-form-item>
 			</el-form>
 			<el-row class="row btn-wrap">
-				<el-button type="primary" class="button" :loading="loadingflag" @click="submit">{{this.loadingflag ? '登陆中': '登录'}}</el-button>
+				<el-button type="primary" class="button" :loading="loadingflag" @click="submit">{{this.loadingflag ? '正在登陆...': '登录'}}</el-button>
 			</el-row>
 		</div>
 		
@@ -61,7 +61,7 @@ export default {
 								type: 'success'
 							});
 							setTimeout(()=>{
-								this.$router.push('/main');
+								this.$router.push('/main/projectlist');
 							}, 1500)
 							
 						} else {
@@ -88,6 +88,7 @@ export default {
 		right: 0;
 		bottom: 0;
 		background: #123456;
+		
 		h2 {
 			margin-top: 10%;
 			margin-bottom: 70px;
@@ -102,6 +103,7 @@ export default {
 			padding: 60px 80px 50px;
 			background: #fff;
 			margin: 0 auto;
+			border-radius: 8px;
 			.button {
 				width: 100%;
 				font-size: 20px;
