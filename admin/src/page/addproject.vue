@@ -23,7 +23,7 @@
                 </el-form-item>
                 <el-form-item label="项目图片" prop="fileList">
                     <el-upload
-                        action="http://192.168.1.102/admin/item.php?action=imgadd"
+                        :action="imgUpoadUrl"
                         list-type="picture-card"
                         size="mini"
                         ref="upload"
@@ -77,12 +77,17 @@
                 }
             }
         },
+        computed: {
+            imgUpoadUrl () {
+                return (baseUrl + 'item.php?action=imgadd');
+            }
+        },
         methods: {
             onSubmit() {
                 this.$refs.form.validate((valid)=>{
                     if (valid) {
                         this.loadingflag = true;
-                        this._fetch('http://192.168.1.102/admin/item.php?action=add', 'POST', this.form)
+                        this.$Http('item.php?action=add', 'POST', this.form)
                             .then((res)=>{
                                 if (res.code === 1) {
                                     this.payload.targetId = res.id;
@@ -143,28 +148,6 @@
                     this.loadingflag = false;
                     this.$router.push('/main/projectlist');
                 }, 500);
-            },
-            _fetch(url, method = 'POST', params) {
-                return new Promise((resolve, reject)=> {
-                    fetch(url, {
-                        method: method,
-                        body: new URLSearchParams(params).toString(),
-                        headers: new Headers({
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        })
-                    })
-                    .then((res)=>{
-                        return res.text();
-                    })
-                    .then((res)=> {
-                        resolve(JSON.parse(res));
-                        return res;
-                    })
-                    .catch((err)=> {
-                        reject(err);
-                    })
-                });
             }
         }
     };

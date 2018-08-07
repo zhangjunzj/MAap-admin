@@ -40,7 +40,7 @@
             @closed="imgModalcloseHandler">
             <div>
                 <el-upload
-                    action="http://192.168.1.102/admin/item.php?action=imgadd"
+                    :action="imgUpoadUrl"
                     list-type="picture-card"
                     ref="imgUpload"
                     
@@ -122,10 +122,15 @@ export default {
 
         }
     },
+    computed: {
+        imgUpoadUrl () {
+            return (baseUrl + 'item.php?action=imgadd');
+        }
+    },
     methods: {
         // 打开图片管理模态框
         imgManage(item) {
-            this._fetch('http://192.168.1.102/admin/item.php?action=queryitemimg', 'POST', {itemId: item.id})
+            this.$Http('item.php?action=queryitemimg', 'POST', {itemId: item.id})
                 .then((res)=> {
                     if (res.code === 1) {
                         res.data && res.data.map((val, key)=> {
@@ -172,7 +177,7 @@ export default {
         // 删除图片
         handleimgBeforeRemove(file, fileList) {
             if (this.imgCheckFlag) {
-                this._fetch('http://192.168.1.102/admin/item.php?action=delimg', 'POST', {id: file.name})
+                this.$Http('item.php?action=delimg', 'POST', {id: file.name})
                     .then((res)=> {
                         if (res.code === 1) {
                             this.$message.success('图片删除成功');
@@ -197,7 +202,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this._fetch('http://192.168.1.102/admin/item.php?action=del', 'POST', {id: item.id})
+                this.$Http('item.php?action=del', 'POST', {id: item.id})
                     .then((res)=> {
                         this.$message({
                             type: 'success',
@@ -229,7 +234,7 @@ export default {
         // 修改
         editItem () {
             let params = Object.assign({}, this.itemForm, {id: this.itemForm.id*1})
-            this._fetch('http://192.168.1.102/admin/item.php?action=edit', 'POST', params)
+            this.$Http('item.php?action=edit', 'POST', params)
                 .then((res)=> {
                     console.log(res);
                     if (res.code === 1) {
@@ -247,7 +252,7 @@ export default {
         },
         queryTableData() {
             this.tableLoading = true;
-            this._fetch('http://192.168.1.102/admin/itemlist.php', 'POST', {test:123})
+            this.$Http('itemlist.php', 'POST', {test:123})
                 .then((res)=> {
                     this.tableData = res.data.reverse();
                     this.tableLoading = false;
@@ -256,28 +261,6 @@ export default {
                     this.$message.error('数据加载失败');
                     this.tableLoading = false;
                 })
-        },
-        _fetch(url, method = 'POST', params) {
-            return new Promise((resolve, reject)=> {
-                fetch(url, {
-                    method: method,
-                    body: new URLSearchParams(params).toString(),
-                    headers: new Headers({
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    })
-                })
-                .then((res)=>{
-                    return res.text();
-                })
-                .then((res)=> {
-                    resolve(JSON.parse(res));
-                    return res;
-                })
-                .catch((err)=> {
-                    reject(err);
-                })
-            });
         }
     },
     mounted () {

@@ -61,7 +61,7 @@ export default {
     methods: {
         queryTableData() {
             this.tableLoading = true;
-            this._fetch('http://192.168.1.102/admin/newslist.php', 'POST')
+            this.$Http('newslist.php', 'POST')
                 .then((res)=> {
                     this.tableData = res.data.reverse();
                     this.tableLoading = false;
@@ -77,7 +77,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this._fetch('http://192.168.1.102/admin/news.php?action=del', 'POST', {id: item.id})
+                this.$Http('news.php?action=del', 'POST', {id: item.id})
                     .then((res)=> {
                         this.$message({
                             type: 'success',
@@ -100,28 +100,6 @@ export default {
             this.targetTitle = item.title;
             this.targetTime = item.addtime;
             this.DialogVisible = true;
-        },
-        _fetch(url, method = 'POST', params) {
-            return new Promise((resolve, reject)=> {
-                fetch(url, {
-                    method: method,
-                    body: new URLSearchParams(params).toString(),
-                    headers: new Headers({
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    })
-                })
-                .then((res)=>{
-                    return res.text();
-                })
-                .then((res)=> {
-                    resolve(JSON.parse(res));
-                    return res;
-                })
-                .catch((err)=> {
-                    reject(err);
-                })
-            });
         }
     },
     mounted () {

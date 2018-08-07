@@ -42,20 +42,9 @@ export default {
 				if (valid) {
 					this.loadingflag = true;
 
-					fetch('http://192.168.1.102/admin/login.php', {
-						method: 'POST',
-						body: new URLSearchParams(this.loginForm).toString(),
-						headers: new Headers({
-							'Accept': 'application/json',
-							'Content-Type': 'application/x-www-form-urlencoded'
-						})
-					})
+					this.$Http('login.php', 'POST', this.loginForm)
 					.then((res)=>{
-						return res.text();
-					})
-					.then((res)=>{
-						let resp = JSON.parse(res);
-						if (resp.code === 1) {
+						if (res.code === 1) {
 							this.$message({
 								message: '登录成功',
 								type: 'success'
@@ -65,12 +54,12 @@ export default {
 							}, 1500)
 							
 						} else {
-							this.$message.error(resp.message || '用户名或密码错误');
+							this.$message.error(res.message || '用户名或密码错误');
 							this.loadingflag = false;
 						}
 					})
 					.catch((err)=> {
-						console.log(err);
+						this.$message.error('登录失败');
 					})
 				} else {
 					return false;

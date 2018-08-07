@@ -26,7 +26,7 @@
                 </el-form-item>
                 <el-form-item label="标题图片" prop="fileList">
                     <el-upload
-                        action="http://192.168.1.102/admin/news.php?action=imgadd"
+                        :action="imgUpoadUrl"
                         list-type="picture-card"
                         size="mini"
                         ref="upload"
@@ -95,13 +95,18 @@
         components: {
             quillEditor
         },
+        computed: {
+            imgUpoadUrl () {
+                return (baseUrl + 'item.php?action=imgadd');
+            }
+        },
         methods: {
             // 发布新闻
             onSubmit() {
                 this.$refs.form.validate((valid)=>{
                     if (valid) {
                         this.loadingflag = true;
-                        this._fetch('http://192.168.1.102/admin/news.php?action=add', 'POST', this.form)
+                        this.$Http('news.php?action=add', 'POST', this.form)
                             .then((res)=>{
                                 if (res.code === 1) {
                                     this.payload.targetId = res.id;
@@ -145,28 +150,6 @@
             },
             onEditorChange() {
 
-            },
-            _fetch(url, method = 'POST', params) {
-                return new Promise((resolve, reject)=> {
-                    fetch(url, {
-                        method: method,
-                        body: new URLSearchParams(params).toString(),
-                        headers: new Headers({
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        })
-                    })
-                    .then((res)=>{
-                        return res.text();
-                    })
-                    .then((res)=> {
-                        resolve(JSON.parse(res));
-                        return res;
-                    })
-                    .catch((err)=> {
-                        reject(err);
-                    })
-                });
             }
         }
     };
