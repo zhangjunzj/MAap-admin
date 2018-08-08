@@ -134,7 +134,7 @@ export default {
                 .then((res)=> {
                     if (res.code === 1) {
                         res.data && res.data.map((val, key)=> {
-                            val.url = 'http://192.168.1.102/admin/' + val.url;
+                            val.url = baseUrl + val.url;
                             return val;
                         });
                         this.fileList = res.data;

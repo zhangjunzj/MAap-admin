@@ -72,7 +72,7 @@
                         { required: true, message: '新闻内容不能为空', trigger: 'blur'}
                     ],
                     fileList: [
-                        { required: true, message: '请上传标题图标', trigger: 'change'}
+                        { required: true, message: '请上传标题图标（不大于100kb）', trigger: 'change'}
                     ]
                 },
                 editorOption:{
@@ -97,7 +97,7 @@
         },
         computed: {
             imgUpoadUrl () {
-                return (baseUrl + 'item.php?action=imgadd');
+                return (baseUrl + 'news.php?action=imgadd');
             }
         },
         methods: {

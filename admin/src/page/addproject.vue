@@ -69,7 +69,7 @@
                         { required: true, message: '项目介绍不能为空', trigger: 'blur'}
                     ],
                     fileList: [
-                        { required: true, message: '请至少上传一张项目图片', trigger: 'change'}
+                        { required: true, message: '请至少上传一张项目图片（建议图片压缩后上传，每张不大于500kb）', trigger: 'change'}
                     ]
                 },
                 payload: { // 图片上传参数
