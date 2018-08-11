@@ -3,7 +3,12 @@
         <el-container class="el-cont">
             <el-header>
                 <div class="main-logo">
-                    <span>MAap</span>
+                    <span>官网后台管理系统</span>
+                    <span class="eng">background management system</span>
+                </div>
+                <div class="main-rightside">
+                    <span class="right-user">admin</span>
+                    <div class="right-loginout" @click="loginoutHandle">退出</div>
                 </div>
             </el-header>
             <el-container>
@@ -73,6 +78,24 @@ export default {
         },
         toIntroduce() {
             this.$router.push('/main/introduce')
+        },
+        loginoutHandle() {
+            let params = {
+                key: sessionStorage.getItem('nihao') || ''
+            }
+            this.$Http('loginout.php', 'POST', params)
+                .then((res)=> {
+                    if (res.code === 1) {
+                        sessionStorage.setItem('nihao', '');
+                        this.$router.push('/login');
+                        this.$message.success('退出登录成功');
+                    } else {
+                        this.$message.error('退出登录失败');
+                    }
+                })
+                .catch(()=> {
+                    this.$message.error('退出登录失败');
+                })
         }
     }
 }
@@ -91,7 +114,8 @@ export default {
         }
         .el-header {
             padding: 0;
-            background: rgb(55,98, 167);
+            background: rgb(34, 70, 125);
+            position: relative;
         }
         .el-aside {
             background: rgb(68, 74, 81);
@@ -100,15 +124,54 @@ export default {
             background: #fff;
         }
         .main-logo {
-            width: 200px;
-            height: 100%;
-            line-height: 60px;
-            font-size: 20px;
             text-indent: 30px;
             float: left;
-            background: rgb(34, 70, 125);
             color: #fff;
-            
+            padding-top: 6px;
+            span {
+                display: block;
+                font-size: 20px;
+                &.eng {
+                    font-size: 14px;
+                }
+            }
+        }
+        .main-rightside {
+            color: #fff;
+            .right-user {
+                height: 24;
+                line-height: 24px;
+                padding-left: 34px;
+                position: absolute;
+                right: 90px;
+                bottom: 10px;
+                font-size: 18px;
+                cursor: pointer;
+                &:before {
+                    content: ' ';
+                    display: block;
+                    width: 24px;
+                    height: 24px;
+                    position: absolute;
+                    left: 0px;
+                    top: 0px;
+                    background-image: url(../assets/default.jpg);
+                    background-size: 24px;
+                    border-radius: 100%;
+                }
+            }
+            .right-loginout {
+                height: 24px;
+                line-height: 24px;
+                font-size: 14px;
+                position: absolute;
+                right: 30px;
+                bottom: 10px;
+                cursor: pointer;
+                &:hover {
+                    opacity: 0.8;
+                }
+            }
         }
     }
 </style>

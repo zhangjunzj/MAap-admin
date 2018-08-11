@@ -3,6 +3,8 @@ import env from '../config/env'
 
 const http = (path, method='POST', params) => {
 	let url = env.baseUrl + path;
+	let key = sessionStorage.getItem('nihao') || '';
+	params = Object.assign({}, params, {key});
 	return new Promise((resolve, reject)=> {
 		fetch(url, {
 			method: method,
@@ -16,6 +18,11 @@ const http = (path, method='POST', params) => {
 			return res.text();
 		})
 		.then((res)=> {
+			let resp = JSON.parse(res);
+			if (resp.code === -1) {
+				Vue.Router.push('/login');
+				return false;
+			}
 			resolve(JSON.parse(res));
 			return res;
 		})

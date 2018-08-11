@@ -13,6 +13,8 @@ import 'quill/dist/quill.bubble.css'
 
 Vue.use(VueQuillEditor)
 
+Vue.Router = router;
+
 Vue.use(ElementUI, { size: 'middle', zIndex: 3000 });
 
 Vue.Http = Vue.prototype.$Http = Http;

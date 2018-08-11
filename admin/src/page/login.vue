@@ -45,6 +45,7 @@ export default {
 					this.$Http('login.php', 'POST', this.loginForm)
 					.then((res)=>{
 						if (res.code === 1) {
+							sessionStorage.setItem('nihao', res.data);
 							this.$message({
 								message: '登录成功',
 								type: 'success'
