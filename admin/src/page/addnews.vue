@@ -13,7 +13,14 @@
                     placeholder="请输入新闻标题" 
                     v-model="form.title"></el-input>
                 </el-form-item>
-                
+                <el-form-item label="新闻介绍" prop="text">
+                    <el-input
+                    type="textarea"
+                    :rows="4"
+                    placeholder="请输入内容"
+                    v-model="form.text">
+                    </el-input>
+                </el-form-item>
                 <el-form-item label="新闻内容" prop="content">
                     <quill-editor 
                         v-model="form.content" 
@@ -61,12 +68,16 @@
                 loadingflag: false,
                 form: {
                     title: '',
+                    text: '',
                     content: '',
                     fileList:[]
                 },
                 rules: {
                     title: [
                         { required: true, message: '标题不能为空', trigger: 'blur'}
+                    ],
+                    text: [
+                        { required: true, message: '新闻介绍不能为空', trigger: 'blur'}
                     ],
                     content: [
                         { required: true, message: '新闻内容不能为空', trigger: 'blur'}
@@ -88,7 +99,8 @@
                     }
                 },
                 payload: { // 图片上传参数
-                    targetId: null
+                    targetId: null,
+                    key: sessionStorage.getItem('nihao') || ''
                 }
             }
         },

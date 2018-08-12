@@ -73,7 +73,8 @@
                     ]
                 },
                 payload: { // 图片上传参数
-                    targetId: null
+                    targetId: null,
+                    key: sessionStorage.getItem('nihao') || ''
                 }
             }
         },

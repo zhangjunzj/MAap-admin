@@ -39,7 +39,7 @@
                         <el-menu-item  @click="toAddNews" index="2-2">新增新闻</el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
-                    <el-menu-item index="3">
+                    <el-menu-item index="3" @click="toUser">
                         <i class="el-icon-setting"></i>
                         <span slot="title">账号管理</span>
                     </el-menu-item>
@@ -78,6 +78,9 @@ export default {
         },
         toIntroduce() {
             this.$router.push('/main/introduce')
+        },
+        toUser() {
+            this.$router.push('/main/user')
         },
         loginoutHandle() {
             let params = {

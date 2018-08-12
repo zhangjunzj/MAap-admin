@@ -8,7 +8,12 @@
             style="width: 100%">
             <el-table-column
             prop="title"
-            label="新闻标题">
+            label="新闻标题"
+            width="300">
+            </el-table-column>
+            <el-table-column
+            prop="text"
+            label="新闻介绍">
             </el-table-column>
             <el-table-column
             prop="addtime"
@@ -17,7 +22,7 @@
             </el-table-column>
             <el-table-column
             label="操作"
-            width="200px">
+            width="180px">
                 <template slot-scope="scope">
                     <el-button type="primary" size="mini" @click="handleDetailNews(scope.row)">详细</el-button>
                     <!-- <el-button type="primary" size="mini" >修改</el-button> -->

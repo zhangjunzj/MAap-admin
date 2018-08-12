@@ -113,7 +113,8 @@ export default {
             },
             tableLoading: true,
             payload: { // 图片上传参数
-                targetId: null
+                targetId: null,
+                key: sessionStorage.getItem('nihao') || ''
             },
             targetTitle: '图片管理',
             imgCheckFlag: true,
