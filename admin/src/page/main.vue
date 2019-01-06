@@ -39,6 +39,10 @@
                         <el-menu-item  @click="toAddNews" index="2-2">新增新闻</el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
+                    <el-menu-item index="5" @click="toAbout">
+                        <i class="el-icon-setting"></i>
+                        <span slot="title">关于我们</span>
+                    </el-menu-item>
                     <el-menu-item index="3" @click="toUser">
                         <i class="el-icon-setting"></i>
                         <span slot="title">账号管理</span>
@@ -81,6 +85,9 @@ export default {
         },
         toUser() {
             this.$router.push('/main/user')
+        },
+        toAbout() {
+            this.$router.push('/main/about')
         },
         loginoutHandle() {
             let params = {

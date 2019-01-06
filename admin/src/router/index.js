@@ -7,6 +7,7 @@ import ProjectList from '@/page/projectlist'
 import NewsList from '@/page/newslist'
 import AddProject from '@/page/addproject'
 import AddNews from '@/page/addnews'
+import About from '@/page/about'
 import Introduce from '@/page/introduce'
 import User from '@/page/user'
 
@@ -43,6 +44,11 @@ export default new Router({
           path: '/main/addnews',
           name: 'AddNews',
           component: AddNews
+        },
+        {
+          path: '/main/about',
+          name: 'About',
+          component: About
         },
         {
           path: '/main/introduce',
