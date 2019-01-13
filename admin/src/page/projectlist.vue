@@ -30,6 +30,15 @@
                     <el-button type="warning" size="mini" @click="delItem(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
+            <el-table-column
+            label="排序"
+            align="center"
+            width="100px">
+                <template slot-scope="scope">
+                    <el-button type="primary" plain size="mini" :circle="true" icon="el-icon-arrow-up" @click="moveUp(scope.$index, scope.row)"></el-button>
+                    <el-button type="primary" plain size="mini" :circle="true" icon="el-icon-arrow-down" @click="moveDown(scope)"></el-button>
+                </template>
+            </el-table-column>
         </el-table>
 
         <!-- 图片管理 -->
@@ -262,6 +271,36 @@ export default {
                     this.$message.error('数据加载失败');
                     this.tableLoading = false;
                 })
+        },
+        moveUp(index, item) {
+            console.log(index);
+            console.log(item);
+            if (index <= 0) {
+                return false;
+            }
+            let params = {
+                curid: item.id,
+                nextid: this.tableData[index-1].id
+            }
+            this.tableLoading = true;
+            this.$Http('sort.php?action=sort', 'POST', params)
+                .then((res)=> {
+                    if (res.code === 1) {
+                        this.queryTableData();
+                    } else {
+                        this.$message.error('排序失败');
+                        this.tableLoading = false;
+                    }
+                    
+                })
+                .catch(()=> {
+                    this.$message.error('排序失败');
+                    this.tableLoading = false;
+                })
+            
+        },
+        moveDown(index) {
+            console.log(index);
         }
     },
     mounted () {
@@ -285,6 +324,11 @@ export default {
                 white-space: nowrap;
             }
         }
+    }
+    .el-button--primary.is-plain:focus {
+        color: #409EFF;
+        background: #ecf5ff;
+        border-color: #b3d8ff;
     }
     
 </style>
