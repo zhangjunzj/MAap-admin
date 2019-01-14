@@ -36,7 +36,7 @@
             width="100px">
                 <template slot-scope="scope">
                     <el-button type="primary" plain size="mini" :circle="true" icon="el-icon-arrow-up" @click="moveUp(scope.$index, scope.row)"></el-button>
-                    <el-button type="primary" plain size="mini" :circle="true" icon="el-icon-arrow-down" @click="moveDown(scope)"></el-button>
+                    <el-button type="primary" plain size="mini" :circle="true" icon="el-icon-arrow-down" @click="moveDown(scope.$index, scope.row)"></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -140,7 +140,7 @@ export default {
     methods: {
         // 打开图片管理模态框
         imgManage(item) {
-            this.$Http('item.php?action=queryitemimg', 'POST', {itemId: item.id})
+            this.$Http('item.php?action=queryitemimg', 'POST', {itemId: item.uid})
                 .then((res)=> {
                     if (res.code === 1) {
                         res.data && res.data.map((val, key)=> {
@@ -212,7 +212,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.$Http('item.php?action=del', 'POST', {id: item.id})
+                this.$Http('item.php?action=del', 'POST', {id: item.id, uid: item.uid})
                     .then((res)=> {
                         this.$message({
                             type: 'success',
@@ -276,6 +276,7 @@ export default {
             console.log(index);
             console.log(item);
             if (index <= 0) {
+                this.$message.warning('已经是第一个了');
                 return false;
             }
             let params = {
@@ -299,8 +300,33 @@ export default {
                 })
             
         },
-        moveDown(index) {
+        moveDown(index, item) {
             console.log(index);
+            console.log(item);
+            if (index >= this.tableData.length -1) {
+                this.$message.warning('已经是最后一个了');
+                return false;
+            }
+            let params = {
+                curid: item.id,
+                nextid: this.tableData[index+1].id
+            }
+            this.tableLoading = true;
+            this.$Http('sort.php?action=sort', 'POST', params)
+                .then((res)=> {
+                    if (res.code === 1) {
+                        this.queryTableData();
+                    } else {
+                        this.$message.error('排序失败');
+                        this.tableLoading = false;
+                    }
+                    
+                })
+                .catch(()=> {
+                    this.$message.error('排序失败');
+                    this.tableLoading = false;
+                })
+
         }
     },
     mounted () {
