@@ -161,7 +161,7 @@ export default {
                     });  
                 })
             this.targetTitle = `项目图片 - ${item.title}`;
-            this.payload.targetId = item.id;
+            this.payload.targetId = item.uid;
             
             
         },

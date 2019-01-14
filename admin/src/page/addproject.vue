@@ -91,7 +91,7 @@
                         this.$Http('item.php?action=add', 'POST', this.form)
                             .then((res)=>{
                                 if (res.code === 1) {
-                                    this.payload.targetId = res.id;
+                                    this.payload.targetId = res.uid;
                                     this.$refs.upload.submit();
                                     
                                 } else {
